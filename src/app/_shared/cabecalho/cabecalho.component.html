@@ -1,0 +1,39 @@
+<md-toolbar class="cabecalho" color="primary">
+    <img src="https://firebasestorage.googleapis.com/v0/b/aloprefeito-151117.appspot.com/o/pagina%2Flogo_click01.png?alt=media&token=dea66b5f-1d04-4cc8-8bf7-129cc0bf102a" alt="" style="max-height: 100px;" />
+
+    <!-- Espaço separador -->
+    <span class="app-toolbar-filler"></span>
+    <div class="button-row">
+        <a routerLink="novaOcorrencia" md-button>
+            <md-icon>add_box</md-icon>
+            <span>Nova Ocorrencia</span>
+        </a>
+        <a routerLink="listaOcorrencia" md-button>
+            <md-icon>list</md-icon>
+            <span>Minhas Ocorrências</span>
+        </a>
+    </div>
+
+    <!-- Espaço separador -->
+    <span class="app-toolbar-filler"></span>
+    <button md-button (click)="logar()" *ngIf="!logado()">
+        <md-icon>forward</md-icon>
+        <span>Logar</span>
+    </button>
+
+    <button md-button *ngIf="logado()" [mdMenuTriggerFor]="userMenu">
+        <img src="{{ usuario.imagem }}" class="user-image" alt="">
+        <span>{{ usuario.nome }}</span>
+    </button>
+    <md-menu #userMenu="mdMenu">
+        <button md-menu-item (click)="perfil()">
+            <md-icon>account_circle</md-icon>
+            <span>Perfil</span>
+        </button>
+        <button md-menu-item (click)="logout()">
+            <md-icon>clear</md-icon>
+            <span>Sair</span>
+        </button>
+    </md-menu>
+
+</md-toolbar>

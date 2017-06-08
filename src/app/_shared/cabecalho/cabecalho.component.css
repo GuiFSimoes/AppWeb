@@ -1,0 +1,8 @@
+.app-toolbar-filler {
+    flex: 1 1 auto;
+}
+
+.cabecalho {
+    min-height: 120px;
+    justify-content: center;
+}
