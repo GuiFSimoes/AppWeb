@@ -1,3 +1,58 @@
-<p>
-  login works!
-</p>
+<md-card>
+
+    <md-card-title class="centralizado">
+        <span style="font-weight: bold;">{{ registro ? 'Cadastrar' : 'Logar' }}</span>
+        <br/>
+        <span>{{ registro ? 'Já tem uma conta Click Cidadão?' : 'Novo no Click Cidadão?' }}</span>
+        <a md-button (click)="registro = !registro">
+            <span>{{ registro ? 'Logar' : 'Cadastrar' }}</span>
+        </a>
+    </md-card-title>
+
+    <md-grid-list cols="2" rowHeight="300px">
+        <!-- [start] Grid Login -->
+        <md-grid-tile *ngIf="!registro">
+            <form action="login('email')">
+                <md-input-container class="full-width">
+                    <input mdInput placeholder="E-mail" required="">
+                </md-input-container>
+                <md-input-container class="full-width">
+                    <input mdInput type="password" placeholder="Senha" required="">
+                </md-input-container>
+                <md-checkbox [(ngModel)]="manterLogado">Lembre-me</md-checkbox>
+                <a md-button>Esqueci a senha</a>
+                <a md-button type="submit">
+                    <img src="assets/img/logar.png" alt="Login" style="max-height: 39px;">
+                </a>
+            </form>
+        </md-grid-tile>
+        <!-- [end] Grid Login -->
+
+        <!-- [start] Grid Registro -->
+        <md-grid-tile *ngIf="registro">
+            <form action="registrar()">
+                <a md-button type="submit">
+                    <img src="assets/img/cadastrar.png" alt="Login" style="max-height: 33px;">
+                </a>
+            </form>
+        </md-grid-tile>
+        <!-- [end] Grid Registro -->
+
+        <!-- [start] Grid Login Face e Google -->
+        <md-grid-tile>
+            <p>
+                <a md-button (click)="login('facebook')">
+                    <img src="assets/img/facebook.png" alt="Facebook Login" style="max-height: 50px;">
+                </a>
+            </p>
+            <p>
+                <a md-button (click)="login('google')">
+                    <img src="assets/img/google.png" alt="Google Login" style="max-height: 50px;">
+                </a>
+            </p>
+        </md-grid-tile>
+        <!-- [end] Grid Login Face e Google -->
+
+    </md-grid-list>
+
+</md-card>

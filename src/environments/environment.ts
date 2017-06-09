@@ -4,5 +4,15 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+    production: false,
+    firebaseConfig: {
+        apiKey: 'AIzaSyCsMuaKhJbwEOILoZCsrkEmqQ5sWXEt_RU',
+        authDomain: 'click-cidadao.firebaseapp.com',
+        databaseURL: 'https://click-cidadao.firebaseio.com',
+        projectId: 'click-cidadao',
+        storageBucket: 'click-cidadao.appspot.com',
+        messagingSenderId: '827854531922'
+    },
+    autenticationOneSignal: 'Basic MzFkZDU2NWQtNmJmZS00M2Y0LWJiZDQtZWY2OTFhOGNiYWU2',
+    aplicationIDOneSignal: '8d6bff67-0c20-44eb-8cb4-c844bab5d3bd',
 };

@@ -1,0 +1,23 @@
+md-grid-tile {
+    width: 75%;
+    background-color: lightcyan;
+    /*height: 50%;*/
+}
+
+h2,
+h3 {
+    font-family: 'roboto', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
+.centralizado {
+    justify-content: center;
+}
+
+.form-class {
+    /*width: 500px;*/
+}
+
+.full-width {
+    /*width: 100%;*/
+}

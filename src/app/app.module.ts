@@ -3,6 +3,15 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
+// Firebase config
+import { AngularFireModule } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
+import { FirebaseApp } from 'angularfire2';
+import 'firebase/storage';
+
+import { environment } from '../environments/environment';
+
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppSharedModule } from './_shared';
@@ -16,6 +25,8 @@ import { ListaOcorrenciaComponent } from './pages/lista-ocorrencia/lista-ocorren
 import { NovaOcorrenciaComponent } from './pages/nova-ocorrencia/nova-ocorrencia.component';
 
 import { AutenticacaoService } from './service/autenticacao.service';
+
+import { UsuarioDAL } from './dal/usuario.dal';
 
 @NgModule({
     declarations: [
@@ -33,9 +44,13 @@ import { AutenticacaoService } from './service/autenticacao.service';
         AppSharedModule,
         NovaOcorrenciaModule,
         ListaOcorrenciaModule,
+        AngularFireModule.initializeApp(environment.firebaseConfig),
+        AngularFireDatabaseModule,
+        AngularFireAuthModule,
     ],
     providers: [
         AutenticacaoService,
+        UsuarioDAL,
     ],
     bootstrap: [AppComponent]
 })
