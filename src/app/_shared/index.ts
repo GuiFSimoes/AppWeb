@@ -13,6 +13,7 @@ import { CabecalhoComponent } from './cabecalho/cabecalho.component';
 
 import { FormatStringPipe } from './pipes/filtro-string.format.pipe';
 import { OrdenacaoPipe } from './pipes/ordenacao.pipe';
+import { FiltroListaPipe } from './pipes/filtro-lista.pipe';
 
 import { EqualValidatorDirective } from './directive/equal-validator.directive';
 
@@ -20,6 +21,7 @@ import { EqualValidatorDirective } from './directive/equal-validator.directive';
     declarations: [
         FormatStringPipe,
         OrdenacaoPipe,
+        FiltroListaPipe,
         CabecalhoComponent,
         EqualValidatorDirective,
     ],
@@ -40,6 +42,7 @@ import { EqualValidatorDirective } from './directive/equal-validator.directive';
         JsonpModule,
         FormatStringPipe,
         OrdenacaoPipe,
+        FiltroListaPipe,
         MaterialModule,
         BrowserAnimationsModule,
     ],

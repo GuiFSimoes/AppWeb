@@ -1,0 +1,44 @@
+h2,
+h3 {
+    font-family: 'roboto', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
+
+/* 
+    Layout do mapa  */
+
+agm-map {
+    height: 650px;
+    width: 800px;
+}
+
+.centro {
+    display: flex;
+    flex-flow: column nowrap;
+    align-content: center;
+    align-self: center;
+    align-items: center;
+}
+
+button {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #0f9d58 !important;
+    border-radius: 5px !important;
+    color: white;
+    font-weight: 600;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.width-75 {
+    width: 75%;
+}
+
+.width-50 {
+    width: 50%;
+}

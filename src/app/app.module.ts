@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import 'hammerjs';
+import { LayoutModule } from 'ng2-flex-layout';
+import { AgmCoreModule } from '@agm/core';
 
 // Firebase config
 import { AngularFireModule } from 'angularfire2';
@@ -21,12 +24,12 @@ import { ListaOcorrenciaModule } from './pages/lista-ocorrencia/lista-ocorrencia
 import { NovaOcorrenciaModule } from './pages/nova-ocorrencia/nova-ocorrencia.module';
 
 import { LoginComponent } from './pages/login/login.component';
-import { ListaOcorrenciaComponent } from './pages/lista-ocorrencia/lista-ocorrencia.component';
+import { ListaOcorrenciaComponent, CaixaDialogoSelecaoCidade, CaixaDialogoDetalhesOcorrencia } from './pages/lista-ocorrencia/lista-ocorrencia.component';
 import { NovaOcorrenciaComponent } from './pages/nova-ocorrencia/nova-ocorrencia.component';
 
 import { AutenticacaoService } from './service/autenticacao.service';
 
-import { UsuarioDAL } from './dal/usuario.dal';
+import { UsuarioDALService } from './dal/usuario.dal';
 
 @NgModule({
     declarations: [
@@ -34,12 +37,15 @@ import { UsuarioDAL } from './dal/usuario.dal';
         LoginComponent,
         NovaOcorrenciaComponent,
         ListaOcorrenciaComponent,
+        CaixaDialogoSelecaoCidade,
+        CaixaDialogoDetalhesOcorrencia,
         ErrorPageComponent
     ],
     imports: [
         BrowserModule,
         FormsModule,
         HttpModule,
+        LayoutModule,
         AppRoutingModule,
         AppSharedModule,
         NovaOcorrenciaModule,
@@ -47,10 +53,15 @@ import { UsuarioDAL } from './dal/usuario.dal';
         AngularFireModule.initializeApp(environment.firebaseConfig),
         AngularFireDatabaseModule,
         AngularFireAuthModule,
+        AgmCoreModule.forRoot({ apiKey: 'AIzaSyBKwgRG6160PWnoeRUkfiO8CuLUNlF_E-U' }),
     ],
     providers: [
         AutenticacaoService,
-        UsuarioDAL,
+        UsuarioDALService,
+    ],
+    entryComponents: [
+        CaixaDialogoSelecaoCidade,
+        CaixaDialogoDetalhesOcorrencia,
     ],
     bootstrap: [AppComponent]
 })

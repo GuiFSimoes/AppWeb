@@ -1,8 +1,14 @@
 .app-toolbar-filler {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
     flex: 1 1 auto;
 }
 
 .cabecalho {
     min-height: 120px;
     justify-content: center;
+}
+
+.user-image {
+    max-height: 65px;
 }

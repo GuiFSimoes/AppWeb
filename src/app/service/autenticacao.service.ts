@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { FirebaseApp } from 'angularfire2';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -7,7 +7,7 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/delay';
 
-import { UsuarioDAL } from '../dal/usuario.dal';
+import { UsuarioDALService } from '../dal/usuario.dal';
 import { Usuario } from '../class/usuario';
 import { FormatStringPipe } from '../_shared/pipes/filtro-string.format.pipe';
 
@@ -52,7 +52,7 @@ export class AutenticacaoService {
 
     constructor(private afAuth: AngularFireAuth,
         private router: Router,
-        private userDALService: UsuarioDAL,
+        private userDALService: UsuarioDALService,
         private format: FormatStringPipe) {
         this.user = afAuth.authState;
     }
@@ -64,7 +64,7 @@ export class AutenticacaoService {
             this.afAuth.auth.signInWithEmailAndPassword(email, password)
                 .then((result) => {
                     // logado!
-                    // console.log('Sucesso login ' + result.email);
+                    console.log('Sucesso login ' + result.email);
                     let usuario = new Usuario();
                     usuario.email = result.email;
                     // -> as informações de nome de usuário vem da autenticação
@@ -76,27 +76,39 @@ export class AutenticacaoService {
                             usuario.estado = _usuario.estado || '';
                             usuario.cidade = _usuario.cidade || '';
                             usuario.bairro = _usuario.bairro || '';
+                            usuario.perfil = _usuario.perfil || '';
 
                             // salva o usuário na sessão!
                             this.setUserInfo(usuario);
-                            resolve(true);
+                            this.setLogado(true);
+                            resolve({ sucesso: true, usuario: usuario });
+                        })
+                        .catch(_ => {
+                            // falha recuperar informações de usuário!
+                            let msgErro = `Poxa, parece que seu e-mail '${email}' não está cadastrado no ClickCidadão, favor corrigir ou cadastrar!`
+                            console.log('Falha login, usuário não localizado na banco!');
+                            resolve({ sucesso: false, error: msgErro });
                         });
                 })
                 .catch((error) => {
                     // falha login!
-                    // console.log('Falha login: ' + error.message);
+                    console.log('Falha login: ' + error.message);
                     let dataErr = {
                         code: '', message: ''
                     };
+                    let msgErro = '';
                     dataErr = JSON.parse(JSON.stringify(error));
                     if (dataErr.code === 'auth/user-not-found') {
                         console.log('Falha login: ' + error.message);
+                        msgErro = `Poxa, parece que seu e-mail '${email}' não está cadastrado no ClickCidadão, favor corrigir ou cadastrar!`
                     } else if (dataErr.code === 'auth/wrong-password') {
                         console.log('Falha login: ' + error.message);
+                        msgErro = `Opa, parece que você entrou com a senha incorreta, favor corrigir e tentar novamente!`
                     }
-                    this.removeUserInfo();
                     this.setLogado(false);
-                    resolve(true);
+                    this.removeUserInfo();
+
+                    resolve({ sucesso: false, error: msgErro });
                 });
         });
 
@@ -112,7 +124,7 @@ export class AutenticacaoService {
         this.afAuth.auth.signOut();
         this.setLogado(false);
         this.removeUserInfo();
-        this.router.navigate(['']);
+        this.router.navigate(['/']);
     }
 
     public criaUsuarioEmail(email: string, password: string): firebase.Promise<any> {
@@ -121,20 +133,8 @@ export class AutenticacaoService {
     }
 
     // envia o email de reset de senha!
-    public passwordReset(email: string, sendNotification: boolean) {
-        this.afAuth.auth.sendPasswordResetEmail(email)
-            // this.auth_fApp.sendPasswordResetEmail(email)
-            .then((response) => {
-                /*if (sendNotification) {
-                    this.notif.sucesso(Mensagens.emailResetSenha, '');
-                }*/
-            })
-            .catch((error) => {
-                /*if (sendNotification) {
-                    this.notif.erro(Mensagens.emailNaoLocalizado, '');
-                }*/
-                console.log(error);
-            });
+    public passwordReset(email: string): firebase.Promise<any> {
+        return this.afAuth.auth.sendPasswordResetEmail(email);
     }
 
     /*    public reautenticacaoUsuario(senhaAtual: string): firebase.Promise<any> {
@@ -165,6 +165,9 @@ export class AutenticacaoService {
 
     private removeUserInfo() {
         localStorage.removeItem('userInfo');
+        sessionStorage.removeItem('userInfo');
+        localStorage.removeItem('isLoggedIn');
+        sessionStorage.removeItem('isLoggedIn');
     }
 
 }

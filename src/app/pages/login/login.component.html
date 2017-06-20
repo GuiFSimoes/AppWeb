@@ -1,6 +1,6 @@
 <md-card>
 
-    <md-card-title class="centralizado">
+    <md-card-title>
         <span style="font-weight: bold;">{{ registro ? 'Cadastrar' : 'Logar' }}</span>
         <br/>
         <span>{{ registro ? 'Já tem uma conta Click Cidadão?' : 'Novo no Click Cidadão?' }}</span>
@@ -9,50 +9,77 @@
         </a>
     </md-card-title>
 
-    <md-grid-list cols="2" rowHeight="300px">
-        <!-- [start] Grid Login -->
-        <md-grid-tile *ngIf="!registro">
-            <form action="login('email')">
-                <md-input-container class="full-width">
-                    <input mdInput placeholder="E-mail" required="">
-                </md-input-container>
-                <md-input-container class="full-width">
-                    <input mdInput type="password" placeholder="Senha" required="">
-                </md-input-container>
-                <md-checkbox [(ngModel)]="manterLogado">Lembre-me</md-checkbox>
-                <a md-button>Esqueci a senha</a>
-                <a md-button type="submit">
-                    <img src="assets/img/logar.png" alt="Login" style="max-height: 39px;">
-                </a>
-            </form>
-        </md-grid-tile>
-        <!-- [end] Grid Login -->
+    <md-card-content>
 
-        <!-- [start] Grid Registro -->
-        <md-grid-tile *ngIf="registro">
-            <form action="registrar()">
-                <a md-button type="submit">
-                    <img src="assets/img/cadastrar.png" alt="Login" style="max-height: 33px;">
-                </a>
-            </form>
-        </md-grid-tile>
-        <!-- [end] Grid Registro -->
+        <div layout="row" layoutXs="column">
+            <div flex="50" flexXs="100" *ngIf="!registro" class="centro">
+                <form>
+                    <md-input-container class="full-width">
+                        <input mdInput type="email" placeholder="E-mail" required [(ngModel)]="dados.email" name="email" [formControl]="emailFormControl">
+                        <md-error *ngIf="emailFormControl?.hasError('pattern') || emailFormControl?.hasError('required')">
+                            Por favor, entre com um e-mail válido.
+                        </md-error>
+                    </md-input-container>
+                    <md-input-container class="full-width">
+                        <input mdInput type="password" placeholder="Senha" required [(ngModel)]="dados.senha" name="senha">
+                    </md-input-container>
 
-        <!-- [start] Grid Login Face e Google -->
-        <md-grid-tile>
-            <p>
-                <a md-button (click)="login('facebook')">
+                    <div layout="row" layoutXs="column">
+                        <div flex="50" flexXs="100" class="centro">
+                            <md-checkbox [(ngModel)]="dados.manterLogado" name="manterLogado">Lembre-me</md-checkbox>
+                        </div>
+                        <div flex="20" flexXs="0">&nbsp;</div>
+                        <div flex="30" flexXs="100" class="centro">
+                            <a md-button (click)="esqueciSenha()">Esqueci a senha</a>
+                        </div>
+                    </div>
+                    <a md-button class="full-width" (click)="loginEmail()">
+                        <img src="assets/img/logar.png" alt="Login" style="max-height: 39px;">
+                    </a>
+                </form>
+            </div>
+            <div flex="50" flexXs="100" *ngIf="registro" class="centro">
+                <form>
+                    <div layout="row">
+                        <div flex>
+
+                        </div>
+                    </div>
+                    <md-input-container class="width-75">
+                        <input mdInput type="text" placeholder="Nome e Sobrenome" required [(ngModel)]="dados.nome" name="nome" [formControl]="nomeFormControl">
+                        <md-error *ngIf="nomeFormControl?.hasError('pattern') || nomeFormControl?.hasError('required')">
+                            Por favor, entre com o nome completo (Nome e Sobrenome).
+                        </md-error>
+                    </md-input-container>
+                    <md-input-container class="width-75">
+                        <input mdInput type="email" placeholder="E-mail" required [(ngModel)]="dados.email" name="email" [formControl]="emailFormControl">
+                        <md-error *ngIf="emailFormControl?.hasError('pattern') || emailFormControl?.hasError('required')">
+                            Por favor, entre com um e-mail válido.
+                        </md-error>
+                    </md-input-container>
+                    <md-input-container class="width-75">
+                        <input mdInput type="password" placeholder="Senha" required [(ngModel)]="dados.senha" name="senha">
+                    </md-input-container>
+                    <md-input-container class="width-75">
+                        <input mdInput type="password" placeholder="Repetir Senha" required [(ngModel)]="dados.senha_novamente" name="senha_novamente">
+                    </md-input-container>
+                    <a md-button (click)="registrar()" class="full-width">
+                        <img src="assets/img/cadastrar.png" alt="Login" style="max-height: 33px;">
+                    </a>
+                </form>
+            </div>
+            <div flex="50" flexXs="100" class="centro">
+                <a md-button (click)="loginFacebook()">
                     <img src="assets/img/facebook.png" alt="Facebook Login" style="max-height: 50px;">
                 </a>
-            </p>
-            <p>
-                <a md-button (click)="login('google')">
+                <br/>
+                <br/>
+                <a md-button (click)="loginGoogle()">
                     <img src="assets/img/google.png" alt="Google Login" style="max-height: 50px;">
                 </a>
-            </p>
-        </md-grid-tile>
-        <!-- [end] Grid Login Face e Google -->
+            </div>
+        </div>
 
-    </md-grid-list>
+    </md-card-content>
 
 </md-card>

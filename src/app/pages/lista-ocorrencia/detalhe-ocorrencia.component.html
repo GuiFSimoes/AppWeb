@@ -1,0 +1,77 @@
+<md-card class="fundo-azul mat-card-flat">
+    <md-card-title>
+        <span class="textoNegrito">Protocolo: {{ ocorrencia.protocolo }}</span>
+        <div class="linha">&nbsp;</div>
+    </md-card-title>
+
+    <md-card-content>
+        <div layout="row">
+            <div flex="33">
+                <span>Tipo: {{ ocorrencia.tipo_descricao }}</span>
+            </div>
+            <div flex="33">
+                <span>Assunto: {{ ocorrencia.assunto_descricao }}</span>
+            </div>
+            <div flex="33">
+                <span>Status: {{ (ocorrencia.status === stausOcorrencia.aberta) ? 
+                                stausOcorrencia.labelAberta : (ocorrencia.status === stausOcorrencia.fechada) ? 
+                                stausOcorrencia.labelFechada : (ocorrencia.status === stausOcorrencia.transito) ? 
+                                stausOcorrencia.labelTransito : stausOcorrencia.labelAtendimento }}</span>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex="50">
+                <span>Data de Abertura: {{ ocorrencia.data_abertura }}</span>
+            </div>
+            <div flex="50">
+                <span>Previsão: {{ ocorrencia.data_previsao }}</span>
+            </div>
+        </div>
+        <div layout="row">
+            <div flex>
+                <span>Endereço: {{ ocorrencia.endereco_completo }}</span>
+            </div>
+        </div>
+
+        <div layout="row" *ngFor="let msg of ocorrencia.mensagens">
+            <div flex="20" *ngIf="!msg.autor_prefeitura">
+                <span class="textoNegrito">Descrição:</span>
+            </div>
+            <div flex="80" *ngIf="!msg.autor_prefeitura">
+                <span>{{ msg.mensagem }}</span>
+            </div>
+
+            <div flex="80" *ngIf="msg.autor_prefeitura">
+                <span class="textoNegrito">Em {{ msg.data }}</span>:<br/>
+                <span>{{ msg.mensagem }}</span>
+            </div>
+            <div flex="20" *ngIf="msg.autor_prefeitura">
+                <span class="">{{ msg.siglaPrefeitura }}</span>
+            </div>
+        </div>
+
+        <div layout="row">
+            <div *ngFor="let foto of ocorrencia.fotos">
+                <div flex>
+                    <img class="foto" src="{{ foto.fotoURL }}" alt="">
+                </div>
+            </div>
+        </div>
+
+        <div layout="row">
+            <div flex>
+                <agm-map [latitude]="ocorrencia.endereco_latitude" [longitude]="ocorrencia.endereco_longitude" [zoom]="17">
+                    <agm-marker [latitude]="ocorrencia.endereco_latitude" [longitude]="ocorrencia.endereco_longitude" iconUrl="assets/img/marcador_mapa.png"></agm-marker>
+                </agm-map>
+            </div>
+        </div>
+
+
+
+    </md-card-content>
+    <md-card-actions>
+        <button md-button (click)="dialogRef.close()">
+            <md-icon>done</md-icon> Fechar
+        </button>
+    </md-card-actions>
+</md-card>

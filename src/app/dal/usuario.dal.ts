@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
 
 @Injectable()
-export class UsuarioDAL {
+export class UsuarioDALService {
 
     constructor() { }
 
@@ -16,6 +16,7 @@ export class UsuarioDAL {
                 .equalTo(eMail)
                 .once('value')
                 .then(_snapshot => {
+                    console.log('Recuperando info user...')
                     if (_snapshot.exists()) {
                         let usuarioRetorno: any;
                         // existindo o usuário, pegar seus dados na lista!
@@ -27,7 +28,10 @@ export class UsuarioDAL {
                         reject(null);
                     }
                 })
-                .catch(_err => reject(null));
+                .catch(_err => {
+                    console.log('Fudeu!');
+                    reject(_err);
+                });
         });
     }
     // *************************************************************

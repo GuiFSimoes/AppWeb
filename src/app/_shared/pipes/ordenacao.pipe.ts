@@ -73,15 +73,14 @@ export class OrdenacaoPipe implements PipeTransform {
                 break;
 
             default:
+                // console.log(direcao);
                 value.sort((a: any, b: any) => {
                     let _a = a[campo];
                     let _b = b[campo];
                     if (typeof _a === 'undefined' && typeof _b === 'undefined') { return 0; }
                     if (_a === undefined && _b !== undefined) { return direcao ? 1 : -1; }
                     if (_a !== undefined && _b === undefined) { return direcao ? -1 : 1; }
-                    if (_a === _b) { return 0; }
-                    return direcao ? (_a.toString().toLowerCase() > _b.toString().toLowerCase() ? -1 : 1)
-                        : (_b.toString().toLowerCase() > _a.toString().toLowerCase() ? -1 : 1);
+                    return direcao ? _a.localeCompare(_b, 'pt-BR') : _b.localeCompare(_a, 'pt-BR');
                 });
                 break;
         }

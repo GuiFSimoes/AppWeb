@@ -1,3 +1,87 @@
-<p>
-  lista-ocorrencia works!
-</p>
+<!--
+    Filtros
+ -->
+<md-card>
+    <md-card-title>
+        Filtros
+    </md-card-title>
+    <md-card-content>
+        <div layout="row">
+            <div flex="40">
+                <span>Cidade:</span><a md-button (click)="selecionaCidade()">{{ cidadeSelecionada }}</a>
+            </div>
+            <div flex="30">
+                <md-input-container>
+                    <input mdInput type="text" placeholder="Protocolo" [(ngModel)]="filtro.protocolo" name="protocolo">
+                </md-input-container>
+            </div>
+            <div flex="30">
+                <md-select placeholder="Status" [(ngModel)]="filtro.status">
+                    <md-option value="">Todas</md-option>
+                    <md-option value="{{stausOcorrencia.aberta}}">{{stausOcorrencia.labelAberta}}</md-option>
+                    <md-option value="{{stausOcorrencia.atendimento}}">{{stausOcorrencia.labelAtendimento}}</md-option>
+                    <md-option value="{{stausOcorrencia.transito}}">{{stausOcorrencia.labelTransito}}</md-option>
+                    <md-option value="{{stausOcorrencia.fechada}}">{{stausOcorrencia.labelFechada}}</md-option>
+                </md-select>
+            </div>
+        </div>
+    </md-card-content>
+</md-card>
+
+<!--
+    Lista das ocorrencias
+ -->
+<div *ngIf="listaOcorrencia?.length === 0; then carregando else lista"></div>
+
+<ng-template #carregando>
+    <md-card>
+        <md-card-subtitle>
+            <p *ngIf="carregandoOcorrencias">Aguarde... Carregando ocorrências!</p>
+            <p *ngIf="semOcorrenciasFiltro">Olá {{ usuario.nome }}! Não localizamos ocorrências para exibir com os filtros selecionados!</p>
+        </md-card-subtitle>
+    </md-card>
+</ng-template>
+
+<ng-template #lista>
+    <br/>
+    <div *ngFor="let item of listaOcorrencia
+                | ordenacao: 'ocorrencia.data_abertura' : 'true'
+                | filtroLista: 'ocorrencia.protocolo' : filtro.protocolo
+                | filtroLista: 'ocorrencia.status' : filtro.status">
+
+        <md-card class="fundo-azul mat-card-flat" (click)="detalhesOcorrencia(item.ocorrencia)">
+            <md-card-title>
+                <span class="textoNegrito">Protocolo: {{ item.ocorrencia.protocolo }}</span>
+                <div class="linha">&nbsp;</div>
+            </md-card-title>
+
+            <md-card-content>
+                <div layout="row">
+                    <div flex="33">
+                        <span>Tipo: {{ item.ocorrencia.tipo_descricao }}</span>
+                    </div>
+                    <div flex="33">
+                        <span>Assunto: {{ item.ocorrencia.assunto_descricao }}</span>
+                    </div>
+                    <div flex="33">
+                        <span>Status: {{ (item.ocorrencia.status === stausOcorrencia.aberta) ? 
+                                stausOcorrencia.labelAberta : (item.ocorrencia.status === stausOcorrencia.fechada) ? 
+                                stausOcorrencia.labelFechada : (item.ocorrencia.status === stausOcorrencia.transito) ? 
+                                stausOcorrencia.labelTransito : stausOcorrencia.labelAtendimento }}</span>
+                    </div>
+                </div>
+                <div layout="row">
+                    <div flex="50">
+                        <span>Data de Abertura: {{ item.ocorrencia.data_abertura }}</span>
+                    </div>
+                    <div flex="50" *ngIf="item.ocorrencia.data_previsao">
+                        <span>Previsão: {{ item.ocorrencia.data_previsao }}</span>
+                    </div>
+                </div>
+            </md-card-content>
+        </md-card>
+
+        <br/>
+    </div>
+
+</ng-template>

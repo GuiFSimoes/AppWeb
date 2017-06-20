@@ -9,6 +9,7 @@ export class Usuario {
     public prefeituraKey = '';
     public logo = '';
     public bairro = '';
+    public perfil = '';
     public cidadesFavoritas: string[] = new Array;
 
     constructor(public id?: string, public data?: any) {
@@ -18,6 +19,7 @@ export class Usuario {
             this.estado = data.estado || '';
             this.bairro = data.bairro || '';
             this.email = data.email || '';
+            this.perfil = data.perfil || '';
         }
     }
 

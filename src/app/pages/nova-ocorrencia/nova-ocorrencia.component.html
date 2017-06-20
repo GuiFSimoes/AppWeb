@@ -1,3 +1,101 @@
-<p>
-  nova-ocorrencia works!
-</p>
+<md-card>
+    <md-card-content>
+        <md-tab-group #tabOcorrencia (selectChange)="alterarTab($event)">
+
+
+            <md-tab label="local">
+                <ng-template md-tab-label>
+                    <md-icon>pin_drop</md-icon> Localização
+                </ng-template>
+                <h1>Localize o endereço de sua ocorrência!</h1>
+                <br/> Teste: {{ teste }}
+                <br/> Lat: {{ local.latitude }}
+                <br/> Lng: {{ local.longitude }}
+
+                <div layout="row">
+                    <div flex="25">&nbsp;</div>
+                    <div flex="50">
+                        <md-input-container class="full-width">
+                            <input mdInput type="text" placeholder="Endereço" [(ngModel)]="local.enderecoCompleto" name="enderecoCompleto">
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <br/>
+
+                <div layout="row">
+                    <div flex class="centro">
+                        <agm-map [latitude]="local.latitude" [longitude]="local.longitude" [zoom]="local.zoom">
+                            <agm-marker [latitude]="local.latitude" [longitude]="local.longitude" [markerDraggable]="true" (dragEnd)="markerDragEnd(m, $event)"></agm-marker>
+                        </agm-map>
+                    </div>
+                </div>
+            </md-tab>
+
+
+            <md-tab label="detalhes">
+                <ng-template md-tab-label>
+                    <md-icon>insert_comment</md-icon> Detalhamento
+                </ng-template>
+                <h1>Vamos detalhar a ocorrência?</h1>
+                <h3 class="centro" *ngIf="local.cidade === 'Demonstração'">{{ mensagemPrefeituraSemContrato }}</h3>
+                <br/>
+                <br/>
+                <div layout="row">
+                    <div flex="10">&nbsp;</div>
+                    <div flex="35">
+                        <md-select placeholder="Tipo" [(ngModel)]="tipo" name="tipo" class="full-width" (change)="alterarTipo()" required>
+                            <md-option *ngFor="let item of prefeitura?.tipos | ordenacao: 'descricao' : 'true'" value="{{ item.descricao }}">{{ item.descricao }}</md-option>
+                        </md-select>
+                    </div>
+                    <div flex="10">&nbsp;</div>
+                    <div flex="35">
+                        <md-select placeholder="Assunto" [(ngModel)]="assunto" name="assunto" class="full-width" (change)="alterarAssunto()" required>
+                            <md-option *ngFor="let item of prefeitura?.assuntos | filtroLista : 'tipo' : tipo | ordenacao: 'descricao' : 'true'" value="{{ item.descricao }}">{{ item.descricao }}</md-option>
+                        </md-select>
+                    </div>
+                </div>
+                <br/>
+                <div layout="row">
+                    <div flex="10">&nbsp;</div>
+                    <div flex="80">
+                        <md-input-container class="full-width">
+                            <input mdInput type="textarea" placeholder="Descreva aqui sua ocorrência" [(ngModel)]="detalhes" name="detalhes" required>
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <br/><br/>
+
+
+                <div layout="row" layoutXs="row">
+                    <div flex="35" flexXs="10">&nbsp;</div>
+                    <div flex="30" flexXs="80">
+                        <button md-raised-button (click)="salvar()" class="full-width">
+                            Salvar Ocorrência
+                        </button>
+                    </div>
+                </div>
+
+            </md-tab>
+
+
+            <md-tab label="finalizar">
+                <ng-template md-tab-label>
+                    <md-icon>done</md-icon> Finalizar
+                </ng-template>
+                <h1>{{ tituloFinalizar }}</h1>
+                <p>{{ mensagemFinalizar }}</p>
+                <br/><br/>
+                <div layout="row" layoutXs="row" *ngIf="ocorrenciaSalva">
+                    <div flex="35" flexXs="10">&nbsp;</div>
+                    <div flex="30" flexXs="80">
+                        <button md-raised-button (click)="novaOcorrencia()" class="full-width">
+                            Abrir Nova Ocorrência
+                        </button>
+                    </div>
+                </div>
+            </md-tab>
+        </md-tab-group>
+    </md-card-content>
+</md-card>
