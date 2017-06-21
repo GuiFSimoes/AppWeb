@@ -34,6 +34,22 @@ export class UsuarioDALService {
                 });
         });
     }
+
+    public criarUsuarioMobile = (usuario: any)/*: Promise<any>*/ => {
+
+        console.log('criando usuário: ', usuario);
+        let databaseRef = firebase.database().ref(`/usuarios`);
+        databaseRef.child(usuario.firebaseID).set(usuario);
+
+        /*return new Promise((resolve, reject) => {
+            let databaseRef = firebase.database().ref(`/usuarios`);
+            databaseRef.child(usuario.firebaseID).set(usuario)
+                .then(_ => resolve(true))
+                .catch(_ => reject(false));
+
+        });*/
+
+    }
     // *************************************************************
 
 }

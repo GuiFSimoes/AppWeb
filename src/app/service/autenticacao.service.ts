@@ -22,6 +22,7 @@ export class AutenticacaoService {
         return this.getUserInfo();
     }
     public setUsuario(user: Usuario): void {
+        this.setLogado(true);
         this.setUserInfo(user);
     }
 
@@ -104,10 +105,12 @@ export class AutenticacaoService {
                     } else if (dataErr.code === 'auth/wrong-password') {
                         console.log('Falha login: ' + error.message);
                         msgErro = `Opa, parece que você entrou com a senha incorreta, favor corrigir e tentar novamente!`
+                    } else {
+                        msgErro = `Poxa! Ocorreu um erro ao tentar fazer seu login: ${dataErr.message}!`;
                     }
+
                     this.setLogado(false);
                     this.removeUserInfo();
-
                     resolve({ sucesso: false, error: msgErro });
                 });
         });
@@ -168,6 +171,143 @@ export class AutenticacaoService {
         sessionStorage.removeItem('userInfo');
         localStorage.removeItem('isLoggedIn');
         sessionStorage.removeItem('isLoggedIn');
+    }
+
+    /**
+     * LoginGoogle
+     */
+    public LoginGoogle(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let provider = new firebase.auth.GoogleAuthProvider();
+            this.afAuth.auth.signInWithPopup(provider)
+                .then((result) => {
+                    // logado!
+                    console.log('Sucesso login ' + JSON.stringify(result.user));
+                    let token = result.credential.accessToken;
+
+                    let usuario = new Usuario();
+                    usuario.email = result.user.email;
+                    usuario.nome = result.user.displayName;
+
+                    this.userDALService.getMobileUser(usuario.email)
+                        .then(_usuario => {
+                            usuario.logo = _usuario.foto || '';
+                            usuario.estado = _usuario.estado || '';
+                            usuario.cidade = _usuario.cidade || '';
+                            usuario.bairro = _usuario.bairro || '';
+                            usuario.perfil = _usuario.perfil || '';
+
+                            // salva o usuário na sessão!
+                            this.setUserInfo(usuario);
+                            this.setLogado(true);
+                            resolve({ sucesso: true, usuario: usuario });
+                        })
+                        .catch(_ => {
+                            // Cadastrar usuário do Google pela primeira vez...
+                            let objUser = {
+                                email: result.user.email || '',
+                                nome: result.user.displayName,
+                                firebaseID: result.user.uid,
+                                foto: result.user.photoURL || '',
+                                googleID: result.user.providerData[0].uid
+                            }
+                            this.userDALService.criarUsuarioMobile(objUser);
+                            usuario.logo = result.user.photoURL || '';
+
+                            // salva o usuário na sessão!
+                            this.setUserInfo(usuario);
+                            this.setLogado(true);
+                            resolve({ sucesso: true, usuario: usuario });
+                        });
+                })
+                .catch((error) => {
+                    // falha login!
+                    console.log('Falha login: ' + error.message);
+                    let dataErr = {
+                        code: '', message: ''
+                    };
+                    let msgErro = '';
+                    dataErr = JSON.parse(JSON.stringify(error));
+                    if (dataErr.code === 'auth/user-not-found') {
+                        console.log('Falha login: ' + error.message);
+                        msgErro = `Poxa, parece que seu e-mail não está cadastrado no ClickCidadão, favor corrigir ou cadastrar!`
+                    } else if (dataErr.code === 'auth/wrong-password') {
+                        console.log('Falha login: ' + error.message);
+                        msgErro = `Opa, parece que você entrou com a senha incorreta, favor corrigir e tentar novamente!`
+                    }
+                    this.setLogado(false);
+                    this.removeUserInfo();
+
+                    resolve({ sucesso: false, error: msgErro });
+                });
+        });
+    }
+
+    public LoginFacebook(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            let provider = new firebase.auth.FacebookAuthProvider();
+            this.afAuth.auth.signInWithPopup(provider)
+                .then((result) => {
+                    // logado!
+                    console.log('Sucesso login ' + JSON.stringify(result.user.providerData));
+                    let token = result.credential.accessToken;
+
+                    let usuario = new Usuario();
+                    usuario.email = result.user.email;
+                    usuario.nome = result.user.displayName;
+
+                    this.userDALService.getMobileUser(usuario.email)
+                        .then(_usuario => {
+                            usuario.logo = _usuario.foto || '';
+                            usuario.estado = _usuario.estado || '';
+                            usuario.cidade = _usuario.cidade || '';
+                            usuario.bairro = _usuario.bairro || '';
+                            usuario.perfil = _usuario.perfil || '';
+
+                            // salva o usuário na sessão!
+                            this.setUserInfo(usuario);
+                            this.setLogado(true);
+                            resolve({ sucesso: true, usuario: usuario });
+                        })
+                        .catch(_ => {
+                            // Cadastrar usuário do facebook pela primeira vez...
+                            let objUser = {
+                                email: result.user.email || '',
+                                nome: result.user.displayName,
+                                firebaseID: result.user.uid,
+                                foto: result.user.photoURL || '',
+                                facebookID: result.user.providerData[0].uid
+                            }
+                            this.userDALService.criarUsuarioMobile(objUser);
+                            usuario.logo = result.user.photoURL || '';
+
+                            // salva o usuário na sessão!
+                            this.setUserInfo(usuario);
+                            this.setLogado(true);
+                            resolve({ sucesso: true, usuario: usuario });
+                        });
+                })
+                .catch((error) => {
+                    // falha login!
+                    console.log('Falha login: ' + error.message);
+                    let dataErr = {
+                        code: '', message: ''
+                    };
+                    let msgErro = '';
+                    dataErr = JSON.parse(JSON.stringify(error));
+                    if (dataErr.code === 'auth/user-not-found') {
+                        console.log('Falha login: ' + error.message);
+                        msgErro = `Poxa, parece que seu e-mail não está cadastrado no ClickCidadão, favor corrigir ou cadastrar!`
+                    } else if (dataErr.code === 'auth/wrong-password') {
+                        console.log('Falha login: ' + error.message);
+                        msgErro = `Opa, parece que você entrou com a senha incorreta, favor corrigir e tentar novamente!`
+                    }
+                    this.setLogado(false);
+                    this.removeUserInfo();
+
+                    resolve({ sucesso: false, error: msgErro });
+                });
+        });
     }
 
 }

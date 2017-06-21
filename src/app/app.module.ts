@@ -24,6 +24,7 @@ import { ListaOcorrenciaModule } from './pages/lista-ocorrencia/lista-ocorrencia
 import { NovaOcorrenciaModule } from './pages/nova-ocorrencia/nova-ocorrencia.module';
 
 import { LoginComponent } from './pages/login/login.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ListaOcorrenciaComponent, CaixaDialogoSelecaoCidade, CaixaDialogoDetalhesOcorrencia } from './pages/lista-ocorrencia/lista-ocorrencia.component';
 import { NovaOcorrenciaComponent } from './pages/nova-ocorrencia/nova-ocorrencia.component';
 
@@ -35,6 +36,7 @@ import { UsuarioDALService } from './dal/usuario.dal';
     declarations: [
         AppComponent,
         LoginComponent,
+        PerfilComponent,
         NovaOcorrenciaComponent,
         ListaOcorrenciaComponent,
         CaixaDialogoSelecaoCidade,

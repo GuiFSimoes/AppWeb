@@ -88,9 +88,9 @@ export class NovaOcorrenciaComponent implements OnInit {
 
     ngOnInit() {
         // verifica se existe um usuário logado
-        console.log('Verificando login...', this.authService.logado());
+        // console.log('Verificando login...', this.authService.logado());
         if (!this.authService.logado() || this.usuario == null) {
-            console.log('Retornando!');
+            // console.log('Retornando!');
             this.voltar();
             return;
         }
@@ -98,7 +98,7 @@ export class NovaOcorrenciaComponent implements OnInit {
 
     }
 
-    iniciaOcorrencia() {
+    public iniciaOcorrencia() {
         let hoje = new Date(Date.now());
         let ano = hoje.getFullYear().toString();
         let mes = ("0" + (hoje.getMonth() + 1).toString()).slice(-2);
@@ -137,10 +137,10 @@ export class NovaOcorrenciaComponent implements OnInit {
 
                     this.getEnderecoPorCoordenadas(this.local.latitude, this.local.longitude)
                         .then(_endereco => {
-                            console.log('sucesso...');
+                            // console.log('sucesso...');
                             this.preencheDadosEndereco(_endereco);
                         }).catch(_err => {
-                            console.log('falha...');
+                            // console.log('falha...');
                             // TODO: acertar erro e pegar endereço correto!!!
                             this.local.enderecoCompleto = 'Não retornado pelo Google: ' + _err;
                             this.local.bairro = '';
@@ -165,17 +165,18 @@ export class NovaOcorrenciaComponent implements OnInit {
         };
     }
 
-    voltar() {
+    public voltar() {
         this.router.navigate(['']);
     }
 
-    alterarTab(tab: MdTabChangeEvent) {
-
+    public alterarTab(tab: MdTabChangeEvent) {
+        // console.log(tab);
         /*if (tab.tab.textLabel === 'local') {
 
         } else */
         if (tab.tab.textLabel === 'detalhes') {
             // verifica mudança de cidade!
+            // console.log('Cidade: ', this.cidadeSelecionada, ' local: ', this.local.cidade);
             if (this.cidadeSelecionada !== this.local.cidade) {
                 // carrega os dados da prefeitura da cidade selecionada!
                 this.getPrefeituraDados(this.local.cidade, this.local.estado);
@@ -206,29 +207,28 @@ export class NovaOcorrenciaComponent implements OnInit {
 
     }
 
-    getPrefeituraDados(cidade: string, estado: string) {
+    public getPrefeituraDados(cidade: string, estado: string) {
         this.prefService.getPrefeituraByCidade(cidade, estado)
             .then((_pref: Prefeitura) => {
+                console.log('Dados recuperados da prefeitura de ', _pref.dados.nome);
                 this.prefeitura = _pref;
                 this.dados.protocolo = this.prefeitura.dados.sigla + this.dados.protocolo.substring(this.dados.protocolo.indexOf('-'));
             });
     }
 
-    alterarTipo() {
-        console.log('tipo...');
+    public alterarTipo() {
         let tipoSelecionado = this.prefeitura.tipos.filter(x => x.descricao === this.tipo).shift();
         this.dados.tipo_descricao = tipoSelecionado.descricao;
     }
 
-    alterarAssunto() {
-        console.log('assunto...');
+    public alterarAssunto() {
         let assuntoSelecionado = this.prefeitura.assuntos.filter(x => x.descricao === this.assunto).shift();
         this.dados.assunto_descricao = assuntoSelecionado.descricao;
         this.dados.assunto_logo = assuntoSelecionado.logo;
         this.dados.secretaria_sigla = assuntoSelecionado.secretaria;
     }
 
-    markerDragEnd(m: any, $event: MouseEvent) {
+    public markerDragEnd(m: any, $event: MouseEvent) {
         let pos = JSON.parse(JSON.stringify($event));
         console.log('Fim do araste do marcador', $event);
 
@@ -237,10 +237,8 @@ export class NovaOcorrenciaComponent implements OnInit {
 
         this.getEnderecoPorCoordenadas(pos.coords.lat, pos.coords.lng)
             .then(_endereco => {
-                console.log('sucesso...');
                 this.preencheDadosEndereco(_endereco);
             }).catch(_err => {
-                console.log('falha...');
                 this.local.enderecoCompleto = 'Não retornado pelo Google: ' + _err;
                 this.local.bairro = '';
                 this.local.cidade = '';
@@ -249,7 +247,23 @@ export class NovaOcorrenciaComponent implements OnInit {
 
     }
 
-    getEnderecoPorCoordenadas(lat: number, lng: number): Promise<any> {
+    public localizarEndereco(event) {
+        this.getCoordenadasPorEndereco(this.local.enderecoCompleto)
+            .then(_endereco => {
+                // console.log('sucesso...');
+                this.preencheDadosEndereco(_endereco);
+                this.local.latitude = _endereco.geometry.location.lat();
+                this.local.longitude = _endereco.geometry.location.lng();
+            }).catch(_err => {
+                // console.log('falha...');
+                this.local.enderecoCompleto = 'Não retornado pelo Google: ' + _err;
+                this.local.bairro = '';
+                this.local.cidade = '';
+                this.local.estado = '';
+            });
+    }
+
+    public getEnderecoPorCoordenadas(lat: number, lng: number): Promise<any> {
         return new Promise((resolve, reject) => {
             let geocoder = new google.maps.Geocoder();
             let coords = {
@@ -259,7 +273,7 @@ export class NovaOcorrenciaComponent implements OnInit {
                 }
             };
             geocoder.geocode(coords, (result, status) => {
-                console.log(result[0]);
+                // console.log(result[0]);
                 // console.log('endereço localizado: ' + local.enderecoCompleto);
                 if (status === 'OK') {
                     this.teste = result[0].geometry.location;
@@ -271,49 +285,50 @@ export class NovaOcorrenciaComponent implements OnInit {
         });
     }
 
-    getCoordenadasPorEndereco(enderecoCompleto: string): Promise<any> {
+    public getCoordenadasPorEndereco(enderecoCompleto: string): Promise<any> {
         return new Promise((resolve, reject) => {
             let geocoder = new google.maps.Geocoder();
             let address = {
                 'address': enderecoCompleto
             };
-            geocoder.geocode(address)
-                .then(_resultGeocode => {
-                    console.log(_resultGeocode[0]);
-                    // console.log('endereço localizado: ' + local.enderecoCompleto);
-                    resolve(_resultGeocode[0]);
-                }).catch(_err => {
-                    console.log(_err);
-                    reject(_err);
-                });
-
+            geocoder.geocode(address, (result, status) => {
+                // console.log(result[0]);
+                // console.log('endereço localizado: ' + local.enderecoCompleto);
+                if (status === 'OK') {
+                    this.teste = result[0].geometry.location;
+                    resolve(result[0]);
+                } else {
+                    reject(status);
+                }
+            });
         });
     }
 
-    preencheDadosEndereco(enderecoGeocode: any) {
+    public preencheDadosEndereco(enderecoGeocode: any) {
         /* Geocode: resultado da localização no google
                             https://developers.google.com/maps/documentation/javascript/geocoding?hl=pt-br#GeocodingResults
                         */
         this.local.enderecoCompleto = enderecoGeocode.formatted_address;
+        console.log(enderecoGeocode);
 
         enderecoGeocode.address_components.forEach(item => {
 
             // Bairro: => sublocality_level_1
-            if (item.types.findIndex(x => x === 'sublocality_level_1' || x === 'sublocality')) {
+            if (item.types.findIndex(x => x === 'sublocality_level_1' || x === 'sublocality') > -1) {
                 this.local.bairro = item.long_name;
             }
             // Estado => administrative_area_level_1
-            if (item.types.findIndex(x => x === 'administrative_area_level_1')) {
-                this.local.bairro = item.short_name;
+            if (item.types.findIndex(x => x === 'administrative_area_level_1') > -1) {
+                this.local.estado = item.short_name;
             }
             // Cidade => administrative_area_level_2
-            if (item.types.findIndex(x => x === 'administrative_area_level_2')) {
-                this.local.bairro = item.long_name;
+            if (item.types.findIndex(x => x === 'administrative_area_level_2') > -1) {
+                this.local.cidade = item.long_name;
             }
         });
     }
 
-    salvar() {
+    public salvar() {
         if (this.validarOcorrencia()) {
             this.ocorrenciaSalva = true;
             this.tabOcorrencia.selectedIndex = 2;
@@ -335,6 +350,7 @@ export class NovaOcorrenciaComponent implements OnInit {
             this.dados.mensagens = new Array<Mensagem>();
             this.dados.mensagens.push(msg);
 
+            console.log('gravando ocorrencia em ', this.local.cidade + '-' + this.local.estado)
             this.ocorrenciaService.prefeituraKey = this.local.cidade + '-' + this.local.estado;
             this.ocorrenciaService.criaOcorrencia(this.dados);
 
@@ -344,7 +360,7 @@ export class NovaOcorrenciaComponent implements OnInit {
         }
     }
 
-    validarOcorrencia(): boolean {
+    public validarOcorrencia(): boolean {
         if (this.dados.tipo_descricao === '') {
             document.getElementsByName('tipo')[0].focus();
             return false;
@@ -360,7 +376,7 @@ export class NovaOcorrenciaComponent implements OnInit {
         return true;
     }
 
-    novaOcorrencia() {
+    public novaOcorrencia() {
         this.ocorrenciaSalva = false;
         this.iniciaOcorrencia();
         this.tabOcorrencia.selectedIndex = 0;

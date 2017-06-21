@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './pages/login/login.component';
+import { PerfilComponent } from './pages/perfil/perfil.component';
 import { ListaOcorrenciaComponent } from './pages/lista-ocorrencia/lista-ocorrencia.component';
 import { NovaOcorrenciaComponent } from './pages/nova-ocorrencia/nova-ocorrencia.component';
 
@@ -16,6 +17,7 @@ const listaOcorrenciaModule = 'app/pages/lista-ocorrencia/lista-ocorrencia.modul
 const rotasApp: Routes = [
     { path: 'novaOcorrencia', component: NovaOcorrenciaComponent /*canActivate: [], loadChildren: novaOcorrenciaModule*/ },
     { path: 'listaOcorrencia', component: ListaOcorrenciaComponent/*canActivate: [], loadChildren: listaOcorrenciaModule*/ },
+    { path: 'perfil', component: PerfilComponent }, // página de login
     { path: 'login', component: LoginComponent }, // página de login
     { path: '', component: LoginComponent }, // página de login
     { path: '**', component: ErrorPageComponent }  // pagina de erro padrão!

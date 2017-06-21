@@ -12,6 +12,10 @@ h3 {
     width: 75%;
 }
 
+.width-70 {
+    width: 70%;
+}
+
 .direita {
     align-content: flex-end;
     justify-content: center;
@@ -24,6 +28,7 @@ h3 {
 }
 
 .centro {
+    margin: auto;
     display: flex;
     flex-flow: column nowrap;
 }

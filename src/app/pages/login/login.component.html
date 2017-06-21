@@ -41,26 +41,39 @@
             <div flex="50" flexXs="100" *ngIf="registro" class="centro">
                 <form>
                     <div layout="row">
-                        <div flex>
-
+                        <div flex="25" class="centro">
+                            <button md-button (click)="avatarPadrao()">
+                                <md-icon>swap_horiz</md-icon>
+                            </button>
+                        </div>
+                        <div flex="50" class="centro">
+                            <img id="imageAvatar" [src]="dados.foto" (click)="fileInputClick()" alt="Foto perfil" style="max-height: 120px; max-width: 120px;" class="centro">
+                            <div style="height:0px;overflow:hidden">
+                                <input type="file" id="fileInput" name="fileInput" (change)="uploadArquivoAvatar($event)" accept="image/jpeg, image/png" />
+                            </div>
+                        </div>
+                        <div flex="25" class="centro">
+                            <button md-button (click)="fileInputClick()">
+                                <md-icon>cloud_upload</md-icon>
+                            </button>
                         </div>
                     </div>
-                    <md-input-container class="width-75">
+                    <md-input-container class="full-width centro">
                         <input mdInput type="text" placeholder="Nome e Sobrenome" required [(ngModel)]="dados.nome" name="nome" [formControl]="nomeFormControl">
                         <md-error *ngIf="nomeFormControl?.hasError('pattern') || nomeFormControl?.hasError('required')">
                             Por favor, entre com o nome completo (Nome e Sobrenome).
                         </md-error>
                     </md-input-container>
-                    <md-input-container class="width-75">
+                    <md-input-container class="full-width centro">
                         <input mdInput type="email" placeholder="E-mail" required [(ngModel)]="dados.email" name="email" [formControl]="emailFormControl">
                         <md-error *ngIf="emailFormControl?.hasError('pattern') || emailFormControl?.hasError('required')">
                             Por favor, entre com um e-mail válido.
                         </md-error>
                     </md-input-container>
-                    <md-input-container class="width-75">
+                    <md-input-container class="full-width centro">
                         <input mdInput type="password" placeholder="Senha" required [(ngModel)]="dados.senha" name="senha">
                     </md-input-container>
-                    <md-input-container class="width-75">
+                    <md-input-container class="full-width centro">
                         <input mdInput type="password" placeholder="Repetir Senha" required [(ngModel)]="dados.senha_novamente" name="senha_novamente">
                     </md-input-container>
                     <a md-button (click)="registrar()" class="full-width">
@@ -69,12 +82,12 @@
                 </form>
             </div>
             <div flex="50" flexXs="100" class="centro">
-                <a md-button (click)="loginFacebook()">
+                <a md-button (click)="loginFacebook()" class="centro">
                     <img src="assets/img/facebook.png" alt="Facebook Login" style="max-height: 50px;">
                 </a>
                 <br/>
                 <br/>
-                <a md-button (click)="loginGoogle()">
+                <a md-button (click)="loginGoogle()" class="centro">
                     <img src="assets/img/google.png" alt="Google Login" style="max-height: 50px;">
                 </a>
             </div>
